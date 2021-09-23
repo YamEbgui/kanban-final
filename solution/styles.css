@@ -10,6 +10,7 @@ ul{
 li{
     border: brown 0.1vw solid;
     margin: 0.1vw;
+    
 }
 #task-sections-div{
     display:flex;

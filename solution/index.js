@@ -28,9 +28,9 @@ function getElementOfSection(type, sectionId){
 }
 //this function gets string of task and id of section add li element with the task string to the start of the ul element of the section
 function addTaskToDOM(stringOfTask , sectionId){
-    console.log(stringOfTask)
     const ulElementOfSection = getElementOfSection("ul", sectionId)
     const newTaskElement = createElement("li",stringOfTask, ["task"])
+    newTaskElement.addEventListener('dblclick' , changeTaskHandler)
     if (ulElementOfSection.children.length === 0){
         ulElementOfSection.append(newTaskElement)
     }else{
@@ -39,8 +39,9 @@ function addTaskToDOM(stringOfTask , sectionId){
 }
 //this function add task to the task storage on the local storage
 function addTaskToLocalStorage(taskType , stringOfTask){
+
     const tasksFromLocalStorage = JSON.parse(localStorage.getItem("tasks"))
-    const tasksOnlyOnOneType = tasksFromLocalStorage[taskType]
+    let tasksOnlyOnOneType = tasksFromLocalStorage[taskType]
     tasksOnlyOnOneType.unshift(stringOfTask)
     tasksFromLocalStorage[taskType] = tasksOnlyOnOneType
     localStorage.setItem("tasks", JSON.stringify(tasksFromLocalStorage))
@@ -81,8 +82,10 @@ function sectionIdToString(sectionId){
 }   
 //this function gets string of task and id of section and make the changes on the DOM and LocalStorage
 function addTask(stringOfTask , sectionId){
+    if(stringOfTask){
         addTaskToDOM(stringOfTask , sectionId)
         addTaskToLocalStorage(sectionIdToString(sectionId) , stringOfTask)
+    }
 }
 //this function is handler for click on one of the add task buttons
 function sectionAddButtonHandler(event){
@@ -99,6 +102,7 @@ function sectionAddButtonHandler(event){
 function addTasksListToTheDOM(ulElement , list){
     if (list.length > 0){
         let liElement = createElement("li", list[0], ["task"])
+        liElement.addEventListener('dblclick' , changeTaskHandler)
         ulElement.append(liElement)
         addTasksListToTheDOM(ulElement , list.slice(1))
     }
@@ -164,7 +168,54 @@ function moveSectionHandler(event){
         }
     }   
 }
+// this function delete all tasks from the local storage
+function deleteAllLocalStorage(){
+    const tasks = {
+        "todo": [],
+        "in-progress": [],
+        "done": []
+    }
+    localStorage.setItem("tasks" , JSON.stringify(tasks))
+}
+//this function gets list of tasks, string of old task, and string of new task and switch in the list the old task by the new task
+function changeLocalStorageTask(listOfTasks , oldTask , newTask){
+    if(listOfTasks.length === 0){
+        return []
+    }
+    if(listOfTasks[0] === oldTask){
+        if(newTask==="" || newTask=== null ){
+            return listOfTasks.slice(1)
+        }else{
+            return [newTask].concat(listOfTasks.slice(1))
+        }
+    }else {
+        return [listOfTasks[0]].concat(changeLocalStorageTask(listOfTasks.slice(1), oldTask ,newTask))
+    }
 
+}
+
+//this function is the handler for changing the tasks. 
+//this function called when the user click twice on a task.
+function changeTaskHandler(event){
+    const liElement=event.target
+    const oldTask=liElement.textContent
+    const taskType = sectionIdToString(liElement.parentElement.parentElement.id)
+    liElement.contentEditable="true"
+    liElement.addEventListener("blur", function () {
+        liElement.contentEditable="false"
+        const newTask=liElement.textContent
+        if(newTask !== oldTask){
+            let tasksFromLocalStorage = JSON.parse(localStorage.getItem("tasks"))
+            let tasksOnlyOnOneType = tasksFromLocalStorage[taskType]
+            tasksOnlyOnOneType = changeLocalStorageTask( tasksOnlyOnOneType  , oldTask , newTask)
+            tasksFromLocalStorage[taskType] = tasksOnlyOnOneType
+            localStorage.setItem("tasks", JSON.stringify(tasksFromLocalStorage))
+            if(newTask === ""){
+                liElement.remove()
+            }
+        }
+    })
+}
 
 
 
