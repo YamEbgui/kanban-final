@@ -1,5 +1,6 @@
 //variables section 
 
+
 const sectionToDo = document.getElementById("section-to-do")
 const sectionInProgress = document.getElementById("section-in-progress")
 const sectionDone = document.getElementById("section-done")
@@ -19,8 +20,6 @@ function createElement(tagName, children = [], classes = [], attributes = {}) {
 //this function gets section id and type of element and return the first element from this type that exist in the section
 function getElementOfSection(type, sectionId){
     const sectionElement = document.getElementById(sectionId)
-    console.log(sectionElement)
-    console.log(sectionElement.children)
     for (let i = 0 ; i < sectionElement.children.length ; i++){
         if(sectionElement.children[i].tagName.toLowerCase() === type){
             return sectionElement.children[i];
@@ -28,7 +27,8 @@ function getElementOfSection(type, sectionId){
     }
 }
 //this function gets string of task and id of section add li element with the task string to the start of the ul element of the section
-function addTaskToHTML(stringOfTask , sectionId){
+function addTaskToDOM(stringOfTask , sectionId){
+    console.log(stringOfTask)
     const ulElementOfSection = getElementOfSection("ul", sectionId)
     const newTaskElement = createElement("li",stringOfTask, ["task"])
     if (ulElementOfSection.children.length === 0){
@@ -56,19 +56,33 @@ function buildLocalStorageStructure(){
         }
         localStorage.setItem("tasks" , JSON.stringify(tasks))
     }
+}
+//get number and return section id 1-todo 2-inprogress 3-done
+function sectionIdFromNumber(num){
+    switch(num){
+        case 1:
+            return "section-to-do"
+        case 2: 
+            return "section-in-progress"
+        case 3: 
+            return "section-done"     
+    }
+
+}
+//get section id and return string of task type
+function sectionIdToString(sectionId){
+    if(sectionId === sectionToDo.id){
+        return "todo" 
+    } else if (sectionId === sectionInProgress.id){
+        return "in-progress"
+    } else{
+        return "done"
+    }
 }   
 //this function gets string of task and id of section and make the changes on the DOM and LocalStorage
 function addTask(stringOfTask , sectionId){
-    if(sectionId === sectionToDo.id){
-        addTaskToHTML(stringOfTask , sectionId)
-        addTaskToLocalStorage("todo" , stringOfTask)
-    } else if (sectionId === sectionInProgress.id){
-        addTaskToHTML(stringOfTask , sectionId)
-        addTaskToLocalStorage("in-progress" , stringOfTask)
-    } else{
-        addTaskToHTML(stringOfTask , sectionId)
-        addTaskToLocalStorage("done" , stringOfTask)
-    }
+        addTaskToDOM(stringOfTask , sectionId)
+        addTaskToLocalStorage(sectionIdToString(sectionId) , stringOfTask)
 }
 //this function is handler for click on one of the add task buttons
 function sectionAddButtonHandler(event){
@@ -83,9 +97,9 @@ function sectionAddButtonHandler(event){
 }
 //this functions get Array of string(tasks) and create them on the DOM
 function addTasksListToTheDOM(ulElement , list){
-    console.log(list)
     if (list.length > 0){
-        ulElement.append(createElement("li", list[0], ["task"]))
+        let liElement = createElement("li", list[0], ["task"])
+        ulElement.append(liElement)
         addTasksListToTheDOM(ulElement , list.slice(1))
     }
     
@@ -96,6 +110,61 @@ function addTasksFromLocalStorageToDOM (tasks){
     addTasksListToTheDOM(getElementOfSection("ul", "section-in-progress") , tasks["in-progress"])
     addTasksListToTheDOM(getElementOfSection("ul", "section-done") , tasks["done"])
 }
+// this function gets item and list and delete this item from the list(delete only the first apperance of this item)
+function removeFromList(item , list){
+    if(list.length === 0){
+        return []
+    }else if(item === list[0]){
+        return list.slice(1)
+    } else{
+        return [list[0]].concat(removeFromList(item , list.slice(1)))
+    }
+
+}
+//this function gets type of task and string of task and remove item from the local storage
+function removeTaskFromLocalStorage(taskType , stringOfTask){
+    let tasksFromLocalStorage = JSON.parse(localStorage.getItem("tasks"))
+    let tasksOnlyOnOneType = tasksFromLocalStorage[taskType]
+    tasksOnlyOnOneType = removeFromList(stringOfTask , tasksOnlyOnOneType)
+    tasksFromLocalStorage[taskType] = tasksOnlyOnOneType
+    localStorage.setItem("tasks", JSON.stringify(tasksFromLocalStorage))
+}
+//this function gets ul element and string of task and remove li element in the ul that have this content inside
+function removeTaskFromDOM(ulElement , stringOfTask){
+    for (let i = 0 ; i < ulElement.children.length ; i++){
+        const liElement = ulElement.children[i];
+        if (liElement.textContent === stringOfTask){
+            ulElement.removeChild(liElement)
+        }
+    }
+}
+//this function get string of task and  id of section and remove it from the section DOM and local storage
+function removeTask(stringOfTask , sectionId){
+    removeTaskFromLocalStorage(sectionIdToString(sectionId) , stringOfTask)
+    removeTaskFromDOM(getElementOfSection("ul", sectionId), stringOfTask)
+}
+//this function move task to a new section and remove it from the past section DOM and local storage 
+function changeSectionForTask(stringOfTask , pastSectionId , newSectionId ){
+    if(pastSectionId !== newSectionId){
+        addTask(stringOfTask , newSectionId)
+        removeTask(stringOfTask , pastSectionId)
+    }
+    
+}
+//this function is the handler function keydown. 
+function moveSectionHandler(event){
+    if (document.querySelector('li:hover')) {
+        if (event.altKey && event.keyCode > 48 && event.keyCode < 52) {
+            const stringLi= document.querySelector('li:hover').textContent
+            let key = event.keyCode-48
+            let sectionId = document.querySelector('li:hover').parentElement.parentElement.id
+            if (sectionIdFromNumber(key) !== sectionId){
+                changeSectionForTask(stringLi , sectionId , sectionIdFromNumber(key))
+          }
+        }
+    }   
+}
+
 
 
 
@@ -109,3 +178,6 @@ buttonD=document.getElementById("submit-add-done")
 buttonT.addEventListener("click", sectionAddButtonHandler)
 buttonI.addEventListener("click", sectionAddButtonHandler)
 buttonD.addEventListener("click", sectionAddButtonHandler)
+window.addEventListener('keydown', moveSectionHandler) 
+
+
