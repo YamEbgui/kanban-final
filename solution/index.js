@@ -97,6 +97,7 @@ function sectionAddButtonHandler(event){
         addTask(inputNewTask.value , sectionId)
         inputNewTask.value=""
     }
+    searchHandler(event)
 }
 //this functions get Array of string(tasks) and create them on the DOM
 function addTasksListToTheDOM(ulElement , list){
@@ -216,6 +217,39 @@ function changeTaskHandler(event){
         }
     })
 }
+// this function gets list of strings and return list of all the items that has the combination inside 
+function searchForCombination(list , combination){
+    if (list.length === 0){
+        return []
+    }else if(list[0].toLowerCase().indexOf(combination.toLowerCase()) !== -1){
+        return [list[0]].concat(searchForCombination(list.slice(1) , combination))
+    }else{
+        return searchForCombination(list.slice(1) , combination)
+    }
+}
+//this function delete any li element from the DOM 
+function deleteAnyliElement(){
+    while(document.querySelector("li")){
+        let liElement=document.querySelector("li")
+        liElement.remove()
+    }   
+}
+
+//this function is handler for search
+//this function runs when the user insert write something in the serch input area
+function searchHandler(event){
+    const inputForSerch = getElementOfSection("input", "section-search")
+    const tasks = {
+        "todo": [],
+        "in-progress": [],
+        "done": []
+    }
+    deleteAnyliElement()
+    tasks["done"] =  searchForCombination(JSON.parse(localStorage.tasks)["done"] , inputForSerch.value)
+    tasks["in-progress"] =  searchForCombination(JSON.parse(localStorage.tasks)["in-progress"] , inputForSerch.value)
+    tasks["todo"] =  searchForCombination(JSON.parse(localStorage.tasks)["todo"] , inputForSerch.value)
+    addTasksFromLocalStorageToDOM (tasks)
+}
 
 
 
@@ -223,6 +257,9 @@ function changeTaskHandler(event){
 
 buildLocalStorageStructure()
 addTasksFromLocalStorageToDOM (JSON.parse(localStorage.tasks))
+buttonS=getElementOfSection("input", "section-search")
+buttonS.addEventListener("click",searchHandler)
+buttonS.addEventListener("keyup",searchHandler)
 buttonT=document.getElementById("submit-add-to-do")
 buttonI=document.getElementById("submit-add-in-progress")
 buttonD=document.getElementById("submit-add-done")
