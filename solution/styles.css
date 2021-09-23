@@ -1,0 +1,24 @@
+h1{
+    text-align: center;
+}
+h2{
+    text-align: center;
+}
+ul{
+    list-style:none;;
+}
+#task-sections-div{
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+    
+}
+
+.task-section{
+    border: 0.2vw blue double;
+    border-radius: 23%;
+    width: 25vw;
+    padding: 2vh;
+    padding-top: 0.5vh;
+    margin:2vh;
+}
