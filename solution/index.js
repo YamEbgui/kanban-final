@@ -1,9 +1,9 @@
 //variables section 
 
-
 const sectionToDo = document.getElementById("section-to-do")
 const sectionInProgress = document.getElementById("section-in-progress")
 const sectionDone = document.getElementById("section-done")
+const apiURL="https://json-bins.herokuapp.com/bin/614b2d8a4021ac0e6c080cfc"
 
 
 //This function create new element 
@@ -251,21 +251,70 @@ function searchHandler(event){
     addTasksFromLocalStorageToDOM (tasks)
 }
 
+// function makeTaskDraggable(liElement){
+//     liElement.setAttribute( 'draggable' , "true")
+//     liElement.addEventListener("dragstart" , handleDrag)
+// }
+// function handleDrag(event){
+//     console.log(event.target)
+// }
 
+//this function is handler for clicking on load button on the page
+//the function will ask for a tasks from the API and after that it will change the DOM and the localstorage to the tasks object that exist on the API
 
-//running the paqe for programing
+async function getTasksFromApi(event){
+    let response =await fetch (apiURL,{
+        method : "get",
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+        } })
+    let resultOfGet= await response.json(); 
+    if (response.status < 400 || response.status === 418){
+        localStorage.setItem("tasks" , JSON.stringify(resultOfGet.tasks))
+        deleteAnyliElement()
+        addTasksFromLocalStorageToDOM (JSON.parse(localStorage.tasks))
+    }else{
+        alert("The Request For Tasks From The API WAS FAILED! \n Try Again")
+    }
+}
+// this function is header for clicking the save button
+//the function will send a tasks object from the local storage to the API
+async function updateTasksOnApi(event){
+    let response = await fetch (apiURL,{
+        method : "PUT",
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+        }, body: JSON.stringify({tasks : JSON.parse(localStorage.tasks)})})
+    if (response.status < 400 || response.status === 418){
+        alert ("Saving The Data Failed! \n Try Again")
+    }   
+}
+function mainFunction(){
+    //this section of the function create the local storge tasks object if it doesnt exist and if it exist the function add any exist tasks to the DOM
+    buildLocalStorageStructure()
+    addTasksFromLocalStorageToDOM (JSON.parse(localStorage.tasks))
+    //this section create listeners to the load and save buttons
+    const buttonLoad=document.getElementById("load-btn")
+    buttonLoad.addEventListener("click",getTasksFromApi)
+    const buttonSave=document.getElementById("save-btn")
+    buttonSave.addEventListener("click",updateTasksOnApi)
+    //this section of the function make the serch input work
+    const searchInput=getElementOfSection("input", "section-search")
+    searchInput.addEventListener("click",searchHandler)
+    searchInput.addEventListener("keyup",searchHandler)
+    //this section of the function make the add buttons of the tasks sections work 
+    const buttonTodo=document.getElementById("submit-add-to-do")
+    const buttonInprogress=document.getElementById("submit-add-in-progress")
+    const buttonDone=document.getElementById("submit-add-done")
+    buttonTodo.addEventListener("click", sectionAddButtonHandler)
+    buttonInprogress.addEventListener("click", sectionAddButtonHandler)
+    buttonDone.addEventListener("click", sectionAddButtonHandler)
+    //this section make the ability to move tasks with clicking on alt + number(1-3) work
+    window.addEventListener('keydown', moveSectionHandler)  
+}
 
-buildLocalStorageStructure()
-addTasksFromLocalStorageToDOM (JSON.parse(localStorage.tasks))
-buttonS=getElementOfSection("input", "section-search")
-buttonS.addEventListener("click",searchHandler)
-buttonS.addEventListener("keyup",searchHandler)
-buttonT=document.getElementById("submit-add-to-do")
-buttonI=document.getElementById("submit-add-in-progress")
-buttonD=document.getElementById("submit-add-done")
-buttonT.addEventListener("click", sectionAddButtonHandler)
-buttonI.addEventListener("click", sectionAddButtonHandler)
-buttonD.addEventListener("click", sectionAddButtonHandler)
-window.addEventListener('keydown', moveSectionHandler) 
-
+//this function runs the page and make it works 
+mainFunction()
 
