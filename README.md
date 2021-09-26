@@ -4,6 +4,7 @@
 
 Welcome to my pre-course final project. In this project, I built a webpage for task manager. 
 To make this webpage I used Javascript, CSS, and HTML languages. 
+- [ ] URL of the page : https://yamebgui.github.io/kanban-final/solution/
 
 ![Page Interface](./screenshot.png)
 
