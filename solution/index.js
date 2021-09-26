@@ -251,24 +251,19 @@ function searchHandler(event){
     addTasksFromLocalStorageToDOM (tasks)
 }
 
-// function makeTaskDraggable(liElement){
-//     liElement.setAttribute( 'draggable' , "true")
-//     liElement.addEventListener("dragstart" , handleDrag)
-// }
-// function handleDrag(event){
-//     console.log(event.target)
-// }
-
 //this function is handler for clicking on load button on the page
 //the function will ask for a tasks from the API and after that it will change the DOM and the localstorage to the tasks object that exist on the API
-
 async function getTasksFromApi(event){
+    const loadingElement = createElement("h3", "LOADING", ["loader"])
+    const loadingDiv = createElement("div",[loadingElement] , ["lds-circle"])
+    document.body.append(loadingDiv)
     let response =await fetch (apiURL,{
         method : "get",
         headers: {
             "Accept": "application/json",
             "Content-Type": "application/json"
         } })
+    loadingElement.remove()
     let resultOfGet= await response.json(); 
     if (response.status < 400 || response.status === 418){
         localStorage.setItem("tasks" , JSON.stringify(resultOfGet.tasks))
@@ -287,10 +282,13 @@ async function updateTasksOnApi(event){
             "Accept": "application/json",
             "Content-Type": "application/json"
         }, body: JSON.stringify({tasks : JSON.parse(localStorage.tasks)})})
-    if (response.status < 400 || response.status === 418){
+        console.log(await response.json())
+    if (response.status > 400 && response.status !== 418){
         alert ("Saving The Data Failed! \n Try Again")
     }   
 }
+
+//this is the main function that runs every event listener that the page need
 function mainFunction(){
     //this section of the function create the local storge tasks object if it doesnt exist and if it exist the function add any exist tasks to the DOM
     buildLocalStorageStructure()
