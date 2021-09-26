@@ -40,8 +40,9 @@ button{
     margin-right: auto;
     margin-left: auto;
     margin-top:0.2vh;
+    margin-bottom:1vh;
     width:8vw;
-    height:3vh;
+    height:4.5vh;
     font-size: 1.5vh;
     
 }
@@ -64,6 +65,7 @@ button{
     display:flex;
     flex-direction: row;
     justify-content: space-between;
+    margin-top:3vh;
 }
 #section-api-actions{
     display:flex;
@@ -105,8 +107,18 @@ button{
     display: block;
     margin-right: auto;
     margin-left: auto;
+    margin-top: 1vh;
+    margin-bottom:1vh;
     text-align: center;
     border: 0.2vw rgb(102, 102, 102) double;
     background-color: rgba(245, 239, 239, 0.712);
     backdrop-filter: blur(4px);
+}
+h3{
+    text-align: center;
+    font-family: 'Holtwood One SC', serif;
+    border: black 0.05vw solid;
+    border-radius: 43%;
+    background-color: darkkhaki;
+
 }
