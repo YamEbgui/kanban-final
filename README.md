@@ -29,7 +29,10 @@ In addition, I add two buttons to the upper section of the page that can load an
  ![example5](./example5.png)
  
 ### Search Combination On The Tasks
-- [ ]
+- [ ] If the user want to serch for a combination in the tasks he can type on the search text area what he want to search. here an example: 
+ ![example6](./example6.png)
+ ![example7](./example7.png)
+ 
 ### Storage
 
 - [ ] The data of all the tasks  saved to `localStorage` following any changes made to the data. The data  saved under a storage key named `tasks`. It saved in the following format :
