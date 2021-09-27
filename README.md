@@ -4,6 +4,7 @@
 
 Welcome to my pre-course final project. In this project, I built a webpage for task manager. 
 To make this webpage I used Javascript, CSS, and HTML languages. 
+- [ ] URL of the page : https://yamebgui.github.io/kanban-final/solution/
 
 ![Page Interface](./screenshot.png)
 
@@ -29,10 +30,23 @@ In addition, I add two buttons to the upper section of the page that can load an
  ![example5](./example5.png)
  
 ### Search Combination On The Tasks
-- [ ] If the user want to serch for a combination in the tasks he can type on the search text area what he want to search. here an example: 
+- [ ] If the user wants to search for a combination in the tasks he can type on the search text area what he wants to search. here is an example: 
  ![example6](./example6.png)
  ![example7](./example7.png)
+
+### Double Click On A Task To Change It
+- [ ] The user also can change the task if he wants. 
+- [ ] To do this he needs to double click on the task and change it and when he is done click on the page but not on the same task.
+ ![example8](./example8.png)
+ ![example9](./example9.png)
+ ![example10](./example10.png)
+
  
+### API 
+- [ ] The user can save the tasks he inserts on the API and also load what is stored on the API with the save and load buttons
+- [ ] The save button send a  PUT request to the API that change the API data. 
+- [ ] The load button send a GET request to the API asks for the API data and change the local storage to be the same as this data
+
 ### Storage
 
 - [ ] The data of all the tasks  saved to `localStorage` following any changes made to the data. The data  saved under a storage key named `tasks`. It saved in the following format :
