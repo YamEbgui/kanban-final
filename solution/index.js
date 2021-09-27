@@ -5,6 +5,7 @@ const sectionInProgress = document.getElementById("section-in-progress")
 const sectionDone = document.getElementById("section-done")
 const apiURL="https://json-bins.herokuapp.com/bin/614b2d8a4021ac0e6c080cfc"
 
+//function section
 
 //This function create new element 
 //The element built with children,classes and atrributes that the function get as arguments
@@ -46,7 +47,6 @@ function addTaskToLocalStorage(taskType , stringOfTask){
     tasksFromLocalStorage[taskType] = tasksOnlyOnOneType
     localStorage.setItem("tasks", JSON.stringify(tasksFromLocalStorage))
 }
-
 //this function create a tasks storage in the local storage, only if there was no tasks storage in the local storage before
 function buildLocalStorageStructure(){
     if(localStorage.tasks === undefined){
@@ -194,7 +194,6 @@ function changeLocalStorageTask(listOfTasks , oldTask , newTask){
     }
 
 }
-
 //this function is the handler for changing the tasks. 
 //this function called when the user click twice on a task.
 function changeTaskHandler(event){
@@ -234,7 +233,6 @@ function deleteAnyliElement(){
         liElement.remove()
     }   
 }
-
 //this function is handler for search
 //this function runs when the user insert write something in the serch input area
 function searchHandler(event){
@@ -250,12 +248,11 @@ function searchHandler(event){
     tasks["todo"] =  searchForCombination(JSON.parse(localStorage.tasks)["todo"] , inputForSerch.value)
     addTasksFromLocalStorageToDOM (tasks)
 }
-
 //this function is handler for clicking on load button on the page
 //the function will ask for a tasks from the API and after that it will change the DOM and the localstorage to the tasks object that exist on the API
 async function getTasksFromApi(event){
     const loadingElement = createElement("h3", "LOADING", ["loader"])
-    const loadingDiv = createElement("div",[loadingElement] , ["lds-circle"])
+    const loadingDiv = createElement("div",[loadingElement] , ["loading-div"])
     document.body.append(loadingDiv)
     let response =await fetch (apiURL,{
         method : "get",
@@ -287,28 +284,39 @@ async function updateTasksOnApi(event){
         alert ("Saving The Data Failed! \n Try Again")
     }   
 }
-
-//this is the main function that runs every event listener that the page need
-function mainFunction(){
-    //this section of the function create the local storge tasks object if it doesnt exist and if it exist the function add any exist tasks to the DOM
-    buildLocalStorageStructure()
-    addTasksFromLocalStorageToDOM (JSON.parse(localStorage.tasks))
-    //this section create listeners to the load and save buttons
+//this function add event listener to the load and save buttons
+function addAPIListeners(){
     const buttonLoad=document.getElementById("load-btn")
     buttonLoad.addEventListener("click",getTasksFromApi)
     const buttonSave=document.getElementById("save-btn")
     buttonSave.addEventListener("click",updateTasksOnApi)
-    //this section of the function make the serch input work
-    const searchInput=getElementOfSection("input", "section-search")
-    searchInput.addEventListener("click",searchHandler)
-    searchInput.addEventListener("keyup",searchHandler)
-    //this section of the function make the add buttons of the tasks sections work 
+}
+//this function add event listeners to the add buttons that add tasks to the sections
+function makeAddButtonsListeners(){
     const buttonTodo=document.getElementById("submit-add-to-do")
     const buttonInprogress=document.getElementById("submit-add-in-progress")
     const buttonDone=document.getElementById("submit-add-done")
     buttonTodo.addEventListener("click", sectionAddButtonHandler)
     buttonInprogress.addEventListener("click", sectionAddButtonHandler)
     buttonDone.addEventListener("click", sectionAddButtonHandler)
+}
+//this function add event listeners to the search input that the user can search for specific tasks
+function makeSearchInputListeners(){
+    const searchInput=getElementOfSection("input", "section-search")
+    searchInput.addEventListener("click",searchHandler)
+    searchInput.addEventListener("keyup",searchHandler)
+}
+//this is the main function that runs every event listener that the page need
+function mainFunction(){
+    //this section of the function create the local storge tasks object if it doesnt exist and if it exist the function add any exist tasks to the DOM
+    buildLocalStorageStructure()
+    addTasksFromLocalStorageToDOM (JSON.parse(localStorage.tasks))
+    //this section create listeners to the load and save buttons
+    addAPIListeners()
+    //this section of the function make the serch input work
+    makeSearchInputListeners()
+    //this section of the function make the add buttons of the tasks sections work 
+    makeAddButtonsListeners()
     //this section make the ability to move tasks with clicking on alt + number(1-3) work
     window.addEventListener('keydown', moveSectionHandler)  
 }
