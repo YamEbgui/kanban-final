@@ -1,11 +1,12 @@
-//variables section 
+//VARIABLE SECTION//
 
 const sectionToDo = document.getElementById("section-to-do")
 const sectionInProgress = document.getElementById("section-in-progress")
 const sectionDone = document.getElementById("section-done")
 const apiURL="https://json-bins.herokuapp.com/bin/614b2d8a4021ac0e6c080cfc"
 
-//function section
+
+//ADD TASKS SECTION//
 
 //This function create new element 
 //The element built with children,classes and atrributes that the function get as arguments
@@ -36,26 +37,6 @@ function addTaskToDOM(stringOfTask , sectionId){
         ulElementOfSection.append(newTaskElement)
     }else{
         ulElementOfSection.insertBefore(newTaskElement , ulElementOfSection.childNodes[0])
-    }
-}
-//this function add task to the task storage on the local storage
-function addTaskToLocalStorage(taskType , stringOfTask){
-
-    const tasksFromLocalStorage = JSON.parse(localStorage.getItem("tasks"))
-    let tasksOnlyOnOneType = tasksFromLocalStorage[taskType]
-    tasksOnlyOnOneType.unshift(stringOfTask)
-    tasksFromLocalStorage[taskType] = tasksOnlyOnOneType
-    localStorage.setItem("tasks", JSON.stringify(tasksFromLocalStorage))
-}
-//this function create a tasks storage in the local storage, only if there was no tasks storage in the local storage before
-function buildLocalStorageStructure(){
-    if(localStorage.tasks === undefined){
-        const tasks = {
-            "todo": [],
-            "in-progress": [],
-            "done": []
-        }
-        localStorage.setItem("tasks" , JSON.stringify(tasks))
     }
 }
 //get number and return section id 1-todo 2-inprogress 3-done
@@ -99,6 +80,58 @@ function sectionAddButtonHandler(event){
     }
     searchHandler(event)
 }
+//this function add event listeners to the add buttons that add tasks to the sections
+function makeAddButtonsListeners(){
+    const buttonTodo=document.getElementById("submit-add-to-do")
+    const buttonInprogress=document.getElementById("submit-add-in-progress")
+    const buttonDone=document.getElementById("submit-add-done")
+    buttonTodo.addEventListener("click", sectionAddButtonHandler)
+    buttonInprogress.addEventListener("click", sectionAddButtonHandler)
+    buttonDone.addEventListener("click", sectionAddButtonHandler)
+}
+
+//LOCAL STORAGE SECTION//
+
+//this function add task to the task storage on the local storage
+function addTaskToLocalStorage(taskType , stringOfTask){
+
+    const tasksFromLocalStorage = JSON.parse(localStorage.getItem("tasks"))
+    let tasksOnlyOnOneType = tasksFromLocalStorage[taskType]
+    tasksOnlyOnOneType.unshift(stringOfTask)
+    tasksFromLocalStorage[taskType] = tasksOnlyOnOneType
+    localStorage.setItem("tasks", JSON.stringify(tasksFromLocalStorage))
+}
+//this function create a tasks storage in the local storage, only if there was no tasks storage in the local storage before
+function buildLocalStorageStructure(){
+    if(localStorage.tasks === undefined){
+        const tasks = {
+            "todo": [],
+            "in-progress": [],
+            "done": []
+        }
+        localStorage.setItem("tasks" , JSON.stringify(tasks))
+    }
+}
+//this function gets type of task and string of task and remove item from the local storage
+function removeTaskFromLocalStorage(taskType , stringOfTask){
+    let tasksFromLocalStorage = JSON.parse(localStorage.getItem("tasks"))
+    let tasksOnlyOnOneType = tasksFromLocalStorage[taskType]
+    tasksOnlyOnOneType = removeFromList(stringOfTask , tasksOnlyOnOneType)
+    tasksFromLocalStorage[taskType] = tasksOnlyOnOneType
+    localStorage.setItem("tasks", JSON.stringify(tasksFromLocalStorage))
+}
+// this function delete all tasks from the local storage
+function deleteAllLocalStorage(){
+    const tasks = {
+        "todo": [],
+        "in-progress": [],
+        "done": []
+    }
+    localStorage.setItem("tasks" , JSON.stringify(tasks))
+}
+
+//TASKS MOVEMENT SECTION//
+
 //this functions get Array of string(tasks) and create them on the DOM
 function addTasksListToTheDOM(ulElement , list){
     if (list.length > 0){
@@ -125,14 +158,6 @@ function removeFromList(item , list){
         return [list[0]].concat(removeFromList(item , list.slice(1)))
     }
 
-}
-//this function gets type of task and string of task and remove item from the local storage
-function removeTaskFromLocalStorage(taskType , stringOfTask){
-    let tasksFromLocalStorage = JSON.parse(localStorage.getItem("tasks"))
-    let tasksOnlyOnOneType = tasksFromLocalStorage[taskType]
-    tasksOnlyOnOneType = removeFromList(stringOfTask , tasksOnlyOnOneType)
-    tasksFromLocalStorage[taskType] = tasksOnlyOnOneType
-    localStorage.setItem("tasks", JSON.stringify(tasksFromLocalStorage))
 }
 //this function gets ul element and string of task and remove li element in the ul that have this content inside
 function removeTaskFromDOM(ulElement , stringOfTask){
@@ -169,15 +194,9 @@ function moveSectionHandler(event){
         }
     }   
 }
-// this function delete all tasks from the local storage
-function deleteAllLocalStorage(){
-    const tasks = {
-        "todo": [],
-        "in-progress": [],
-        "done": []
-    }
-    localStorage.setItem("tasks" , JSON.stringify(tasks))
-}
+
+//CHANGE TASK SECTION//
+
 //this function gets list of tasks, string of old task, and string of new task and switch in the list the old task by the new task
 function changeLocalStorageTask(listOfTasks , oldTask , newTask){
     if(listOfTasks.length === 0){
@@ -216,6 +235,9 @@ function changeTaskHandler(event){
         }
     })
 }
+
+//SEARCH INPUT SECTION//
+
 // this function gets list of strings and return list of all the items that has the combination inside 
 function searchForCombination(list , combination){
     if (list.length === 0){
@@ -248,6 +270,14 @@ function searchHandler(event){
     tasks["todo"] =  searchForCombination(JSON.parse(localStorage.tasks)["todo"] , inputForSerch.value)
     addTasksFromLocalStorageToDOM (tasks)
 }
+//this function add event listeners to the search input that the user can search for specific tasks
+function makeSearchInputListeners(){
+    const searchInput=getElementOfSection("input", "section-search")
+    searchInput.addEventListener("click",searchHandler)
+    searchInput.addEventListener("keyup",searchHandler)
+}
+//API SECTION//
+
 //this function is handler for clicking on load button on the page
 //the function will ask for a tasks from the API and after that it will change the DOM and the localstorage to the tasks object that exist on the API
 async function getTasksFromApi(event){
@@ -291,21 +321,9 @@ function addAPIListeners(){
     const buttonSave=document.getElementById("save-btn")
     buttonSave.addEventListener("click",updateTasksOnApi)
 }
-//this function add event listeners to the add buttons that add tasks to the sections
-function makeAddButtonsListeners(){
-    const buttonTodo=document.getElementById("submit-add-to-do")
-    const buttonInprogress=document.getElementById("submit-add-in-progress")
-    const buttonDone=document.getElementById("submit-add-done")
-    buttonTodo.addEventListener("click", sectionAddButtonHandler)
-    buttonInprogress.addEventListener("click", sectionAddButtonHandler)
-    buttonDone.addEventListener("click", sectionAddButtonHandler)
-}
-//this function add event listeners to the search input that the user can search for specific tasks
-function makeSearchInputListeners(){
-    const searchInput=getElementOfSection("input", "section-search")
-    searchInput.addEventListener("click",searchHandler)
-    searchInput.addEventListener("keyup",searchHandler)
-}
+
+//MAIN FUNCTION//
+
 //this is the main function that runs every event listener that the page need
 function mainFunction(){
     //this section of the function create the local storge tasks object if it doesnt exist and if it exist the function add any exist tasks to the DOM
@@ -320,7 +338,5 @@ function mainFunction(){
     //this section make the ability to move tasks with clicking on alt + number(1-3) work
     window.addEventListener('keydown', moveSectionHandler)  
 }
-
-//this function runs the page and make it works 
 mainFunction()
 
