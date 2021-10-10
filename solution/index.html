@@ -13,25 +13,29 @@
     <section id="section-search">
         <input id="search" placeholder="search">
     </section>
-    <div>
-        <section id="section-to-do">
+    <section id="section-api-actions">
+        <button id="load-btn" class="api-button">LOAD</button>
+        <button id="save-btn" class="api-button">SAVE</button>
+    </section>
+    <div id="task-sections-div">
+        <section id="section-to-do" class="task-section">
             <h2 class="section-title">To Do</h2>
             <ul class="to-do-tasks"></ul>
-            <input class="input">
-            <button id="submit-add-to-do" class="submit-button"></button>
+            <input id="add-to-do-task" class="input" placeholder="Insert task">
+            <button id="submit-add-to-do" class="submit-button">ADD</button>
         </section>
-        <section id="section-in-progress"> 
+        <section id="section-in-progress" class="task-section"> 
             <h2 class="section-title">In Progress</h2>
             <ul class="in-progress-tasks"></ul>
-            <input class="input">
-            <button id="submit-add-in-progress" class="submit-button"></button>
+            <input id="add-in-progress-task" class="input" placeholder="Insert task">
+            <button id="submit-add-in-progress" class="submit-button">ADD</button>
         </section>
-        </section id="section-done">
+        <section id="section-done" class="task-section">
             <h2 class="section-title">Done</h2>
             <ul class="done-tasks"></ul> 
-            <input class="input">
-            <button id="submit-add-done" class="submit-button"></button>
-        <section>
+            <input id="add-done-task" class="input" placeholder="Insert task">
+            <button id="submit-add-done" class="submit-button">ADD</button>
+        </section>
     </div>
 </body>
 </html>

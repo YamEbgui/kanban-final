@@ -1,0 +1,124 @@
+@import url('https://fonts.googleapis.com/css2?family=Holtwood+One+SC&display=swap');
+
+
+body{
+    background-image:url("../images/wallpapers/wallpaper1.jpg");
+    background-size: cover;
+    margin-left:6vw;
+    margin-right:6vw;
+}
+h1{
+    margin-top: 5vh;
+    font-size: 6vh;
+    text-align: center;
+    font-family: 'Holtwood One SC', serif;
+}
+h2{
+    text-align: center;
+    font-size: 3vh;
+    font-family: 'Holtwood One SC', serif;
+}
+ul{
+    list-style:none;
+    padding:1vw;
+    margin:1vw;
+}
+li{
+    border: rgba(0, 0, 0, 0.123) 0.1vw solid;
+    border-radius: 12%;
+    margin: 0.3vw;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 2.5vh;
+    padding-left:0.1vw;
+    background-color: rgba(0, 0, 0, 0.123);
+    backdrop-filter: blur(4px);
+    text-align: center;
+    
+}
+button{
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top:0.2vh;
+    margin-bottom:1vh;
+    width:8vw;
+    height:4.5vh;
+    font-size: 1.5vh;
+    
+}
+#search{
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+    width: 16vw;
+    height: 4vh;
+    padding: 1vh;
+    font-size: 3vh;
+    text-align: center;
+}
+#task-sections-div input{
+    width: 15vw;
+    height: 2.5vh;
+    font-size: 1.75vh;
+}
+#task-sections-div{
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top:3vh;
+}
+#section-api-actions{
+    display:flex;
+    flex-direction: row;
+    justify-content: right;
+    
+}
+.api-button{
+    background-color: rgba(0, 0, 0, 0.123);
+    backdrop-filter: blur(9px);
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    border: black 0.05vw solid;
+    margin:0.05vw;
+    height:5vh;
+    width:6vw;
+    font-size: 3vh;
+}
+.task-section{
+    border: 0.2vw rgb(102, 102, 102) double;
+    border-radius: 23%;
+    width: 25vw;
+    display: flex;
+    flex-direction:column ;
+    padding: 0vh;
+    padding-top: 0.5vh;
+    margin:0vh;
+    background-color: rgba(0, 0, 0, 0.123);
+    backdrop-filter: blur(4px);
+}
+.task-section ul{
+    padding: 0vh;
+    margin: 0vh;
+}
+.task-section input{
+    width:15vw;
+    height:4vh;
+}
+.input{
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 1vh;
+    margin-bottom:1vh;
+    text-align: center;
+    border: 0.2vw rgb(102, 102, 102) double;
+    background-color: rgba(245, 239, 239, 0.712);
+    backdrop-filter: blur(4px);
+}
+h3{
+    text-align: center;
+    font-family: 'Holtwood One SC', serif;
+    border: black 0.05vw solid;
+    border-radius: 43%;
+    background-color: darkkhaki;
+
+}
