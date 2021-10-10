@@ -14,6 +14,7 @@ There are 3 sections of tasks on my page: tasks to do, tasks in progress, and do
 In each tasks section, there is a button and text area to insert new tasks. 
 Also, there is a text area above the sections of the tasks that is used to search combinations of chars in the tasks.
 In addition, I add two buttons to the upper section of the page that can load and save tasks from the API 
+
 [I will detail later how things happen on the page]
 
 ### Add Task 
